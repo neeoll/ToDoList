@@ -2,6 +2,7 @@ package com.example.todolist
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("VIEW", "Activity onCreate")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -43,5 +45,6 @@ class MainActivity : AppCompatActivity() {
 
     fun sendData(data: TaskList) {
         mData = data
+        Log.e("VIEW", "mData: $mData")
     }
 }
