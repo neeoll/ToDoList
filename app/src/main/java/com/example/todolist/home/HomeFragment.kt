@@ -31,6 +31,10 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
         fun removeAtIndex(index: Int)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +46,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
             communicatorData = arguments?.getSerializable("data") as ArrayList<Task>
             for (item in communicatorData) {
                 insertTask(0, Task(
-                    item.title, item.date, item.description, item.isCompleted)
+                    item.id, item.title, item.hour, item.minute, item.days, item.recurring, item.isActive)
                 )
             }
         }

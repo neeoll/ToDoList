@@ -3,24 +3,20 @@ package com.example.todolist
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.app.NotificationCompat
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.example.todolist.home.HomeFragment
-import java.io.*
-import kotlin.collections.ArrayList
+import java.io.File
+import java.io.ObjectInputStream
+import java.util.*
+
 
 // TODO: delete test, tasks, taskList
 class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallback {
-
-    lateinit var notificationManager: NotificationManager
-    lateinit var notificationChannel: NotificationChannel
-    lateinit var builder: NotificationCompat.Builder
-    private val channelId = "i.apps.notifications"
-    private val description = "Test notification"
+    private lateinit var alarmManager: AlarmManager
 
     private var taskList: ArrayList<Task> = arrayListOf()
     private val filename: String = "file"
@@ -52,20 +48,17 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
         }
     }
 
-    private fun checkIfDataExists(): Boolean {
-        return fileExists(filename) == true
-    }
-
     private fun fileExists(name: String): Boolean? {
         val file: File? = applicationContext.getFileStreamPath(name)
         return file?.exists()
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun sendTaskData(data: Task) {
         val bundle = Bundle()
 
-        pushNotification(data)
         taskList.add(data)
+        createNotificationIntent(data)
         bundle.putSerializable("data", taskList)
 
         val transaction = this.supportFragmentManager.beginTransaction()
@@ -74,32 +67,22 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
         transaction.replace(R.id.fragment_container, homeFragment).commit()
     }
 
-    private fun pushNotification(data: Task) {
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val intent = Intent(this, LauncherActivity::class.java)
-        val pendingIntent =
-            PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationChannel =
-                NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.GREEN
-            notificationChannel.enableVibration(true)
-            notificationManager.createNotificationChannel(notificationChannel)
+    /* SUNDAY = 1, MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6, SATURDAY = 7 */
+    private fun createNotificationIntent(data: Task) {
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-            builder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_baseline_delete_outline_24)
-                .setContentIntent(pendingIntent)
-                .setContentTitle(data.title)
-                .setContentText(data.description)
-        } else {
-            builder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_baseline_delete_outline_24)
-                .setContentIntent(pendingIntent)
-                .setContentTitle(data.title)
-                .setContentText(data.description)
-        }
-        notificationManager.notify(1234, builder.build())
+        val notificationIntent = Intent(this, Receiver::class.java)
+            .putExtra("title", data.title)
+        val broadcastIntent = PendingIntent.getBroadcast(
+            this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, data.hour)
+        calendar.set(Calendar.MINUTE, data.minute)
+        calendar.set(Calendar.SECOND, 0)
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent)
+        Log.d("RECEIVER", "Broadcaster: ${Date()}")
     }
 
     override fun removeAtIndex(index: Int) {

@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".Receiver">
+            <intent-filter>
+                <action android:name="com.example.todolist.action.SEND_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
