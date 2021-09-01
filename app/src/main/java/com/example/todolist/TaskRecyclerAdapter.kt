@@ -8,15 +8,20 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R.drawable.*
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 
-class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback) :
+
+class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback, view: View) :
     RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>() {
 
     private val mData: MutableList<Task> = data
     private val mListener: RecyclerCallback = listener
+    private val mView: View = view
 
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
+        fun switchAlarm(data: Task, isChecked: Boolean)
     }
 
     // inflates the row layout from xml when needed
@@ -37,8 +42,11 @@ class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback) :
 
         holder.title.text = mData[position].title
         holder.time.text = "${mData[position].hour}:${mData[position].minute}"
-        holder.toggle.isChecked = mData[position].isActive
         holder.days.text = daysString
+        holder.toggle.isChecked = mData[position].isActive
+        holder.toggle.setOnCheckedChangeListener { _, isChecked ->
+            mListener.switchAlarm(mData[position], isChecked)
+        }
         when {
             mData[position].recurring -> {
                 holder.recurring.setBackgroundResource(ic_baseline_repeat_24)
@@ -70,9 +78,26 @@ class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback) :
 
         override fun onLongClick(v: View?): Boolean {
             val position: Int = adapterPosition
-
-            mListener.removeAtIndex(position)
+            val temp = mData.removeAt(position)
             notifyItemRemoved(position)
+
+            val layout: RecyclerView = mView.findViewById(R.id.task_lists_recycler)
+            Snackbar.make(layout, "Reminder Deleted", Snackbar.LENGTH_LONG)
+                .setAction("Undo") {
+                    mData.add(position, temp)
+                    notifyItemInserted(position)
+                }.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                            mListener.removeAtIndex(position)
+                        }
+                    }
+
+                    override fun onShown(transientBottomBar: Snackbar?) {
+                        super.onShown(transientBottomBar)
+                    }
+            }).show()
 
             return true
         }

@@ -1,10 +1,12 @@
 package com.example.todolist.home
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -29,12 +31,14 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
 
     interface HomeCallback {
         fun removeAtIndex(index: Int)
+        fun switchAlarm(data: Task, isChecked: Boolean)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,7 +66,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
 
         view.task_lists_recycler.apply {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            adapter = TaskRecyclerAdapter(taskList, this@HomeFragment)
+            adapter = TaskRecyclerAdapter(taskList, this@HomeFragment, this)
             helper.attachToRecyclerView(this)
         }
 
@@ -95,7 +99,16 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
     }
 
     override fun removeAtIndex(index: Int) {
-        taskList.removeAt(index)
-        homeListener.removeAtIndex(index)
+        try {
+            val temp = taskList.removeAt(index)
+            homeListener.removeAtIndex(index)
+            Log.d("RECEIVER", "Item removed: $temp")
+        } catch (e: Exception) {
+            Log.e("RECEIVER", "$e")
+        }
+    }
+
+    override fun switchAlarm(data: Task, isChecked: Boolean) {
+        homeListener.switchAlarm(data, isChecked)
     }
 }

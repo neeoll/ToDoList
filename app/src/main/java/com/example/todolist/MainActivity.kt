@@ -74,18 +74,46 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
         val notificationIntent = Intent(this, Receiver::class.java)
             .putExtra("title", data.title)
         val broadcastIntent = PendingIntent.getBroadcast(
-            this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            this, data.id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, data.hour)
-        calendar.set(Calendar.MINUTE, data.minute)
-        calendar.set(Calendar.SECOND, 0)
+        for (i in data.days.indices) {
+            if (data.days[i]) {
+                calendar.set(Calendar.DAY_OF_WEEK, i + 1)
+                calendar.set(Calendar.HOUR_OF_DAY, data.hour)
+                calendar.set(Calendar.MINUTE, data.minute)
+                calendar.set(Calendar.SECOND, 0)
+            }
+        }
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, broadcastIntent)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, broadcastIntent)
         Log.d("RECEIVER", "Broadcaster: ${Date()}")
     }
 
     override fun removeAtIndex(index: Int) {
-        taskList.removeAt(index)
+        try {
+            val temp = taskList.removeAt(index)
+            Log.d("RECEIVER", "Item removed: $temp")
+        } catch (e: Exception) {
+            Log.e("RECEIVER", "$e")
+        }
+    }
+
+    override fun switchAlarm(data: Task, isChecked: Boolean) {
+        Log.d("RECEIVER", "(Task: $data), (Is Checked: $isChecked)")
+
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, Receiver::class.java)
+
+        if (!isChecked) {
+            val pendingIntent = PendingIntent.getBroadcast(
+                this, data.id, intent, PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+            Log.d("RECEIVER", "Alarm with ID ${data.id} cancelled successfully")
+        } else {
+            createNotificationIntent(data)
+        }
     }
 }
