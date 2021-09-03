@@ -12,11 +12,12 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import java.util.*
 
-class Receiver: BroadcastReceiver() {
+class AlarmReceiver: BroadcastReceiver() {
     private val channelId = "i.apps.notifications"
     private lateinit var notificationChannel: NotificationChannel
 
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context?, intent: Intent) {
+        Log.d("RECEIVER", "onReceive: ${intent.action}")
         Log.d("RECEIVER", "Receiver: ${Date()}")
 
         val notificationIntent = Intent(context, MainActivity::class.java)
@@ -43,7 +44,7 @@ class Receiver: BroadcastReceiver() {
 
         val notification = compatBuilder
             .setContentTitle(context.resources.getString(R.string.app_name))
-            .setContentText(intent?.getStringExtra("title"))
+            .setContentText(intent.getStringExtra("title"))
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH).build()

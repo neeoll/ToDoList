@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".newtask.NewTaskFragment">
+    tools:context=".newreminder.NewReminderFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/ceiling"
@@ -21,18 +21,21 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ceiling">
+
         <EditText
-            android:id="@+id/new_task_title"
+            android:id="@+id/new_reminder_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
-            android:layout_margin="16dp" />
+            android:layout_margin="@dimen/nReminder_title_margin"
+            android:hint="@string/hint_title"
+            android:minHeight="48dp"
+            tools:ignore="Autofill,TextFields" />
         <TimePicker
-            android:id="@+id/new_task_time"
+            android:id="@+id/new_reminder_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner"
-            android:layout_margin="16dp" />
+            android:layout_margin="@dimen/nReminder_time_margin" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,49 +44,49 @@
                 android:id="@+id/checkbox_sun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sun"
+                android:text="@string/sun"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_mon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mon"
+                android:text="@string/mon"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_tue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tue"
+                android:text="@string/tue"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_wed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wed"
+                android:text="@string/wed"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_thu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thu"
+                android:text="@string/thu"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_fri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Fri"
+                android:text="@string/fri"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
             <CheckBox
                 android:id="@+id/checkbox_sat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sat"
+                android:text="@string/sat"
                 android:scaleX="0.9"
                 android:scaleY="0.9" />
         </LinearLayout>
@@ -91,17 +94,17 @@
             android:id="@+id/checkbox_recurring"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recurring"
+            android:text="@string/recurring"
             android:scaleX="0.9"
             android:scaleY="0.9" />
         <TextView
-            android:id="@+id/create_new_task"
+            android:id="@+id/create_reminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rectangular_button"
-            android:text="Add New Task"
-            android:textSize="20dp"
+            android:text="@string/create_new_reminder"
+            android:textSize="20sp"
             android:gravity="center"
-            android:layout_margin="16dp"/>
+            android:layout_margin="@dimen/create_reminder_margin"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

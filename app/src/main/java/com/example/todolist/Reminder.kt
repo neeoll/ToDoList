@@ -2,7 +2,7 @@ package com.example.todolist
 
 import java.io.Serializable
 
-class Task(
+class Reminder(
     val id: Int,
     val title: String,
     val hour: Int,

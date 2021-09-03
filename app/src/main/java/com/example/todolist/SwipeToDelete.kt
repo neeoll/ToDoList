@@ -1,10 +1,9 @@
 package com.example.todolist
 
-import android.content.Context
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class SwipeToDelete(context: Context, dragDir: Int, swipeDir: Int):
+abstract class SwipeToDelete(dragDir: Int, swipeDir: Int):
     ItemTouchHelper.SimpleCallback(dragDir, swipeDir) {
 
     override fun onMove(

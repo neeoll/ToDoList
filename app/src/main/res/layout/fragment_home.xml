@@ -24,7 +24,7 @@
         app:layout_constraintGuide_percent="0.3" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/task_lists_recycler"
+        android:id="@+id/reminder_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
@@ -34,9 +34,9 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_ceiling"/>
 
     <TextView
-        android:id="@+id/add_list"
-        android:layout_width="75sp"
-        android:layout_height="75sp"
+        android:id="@+id/add_reminder"
+        android:layout_width="80sp"
+        android:layout_height="80sp"
         android:layout_marginBottom="50dp"
         android:layout_marginRight="25dp"
         android:background="@drawable/round_button"

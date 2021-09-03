@@ -11,23 +11,22 @@ import com.example.todolist.R.drawable.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
+class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, view: View) :
+    RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback, view: View) :
-    RecyclerView.Adapter<TaskRecyclerAdapter.ViewHolder>() {
-
-    private val mData: MutableList<Task> = data
+    private val mData: MutableList<Reminder> = data
     private val mListener: RecyclerCallback = listener
     private val mView: View = view
 
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
-        fun switchAlarm(data: Task, isChecked: Boolean)
+        fun switchAlarm(data: Reminder, isChecked: Boolean)
     }
 
     // inflates the row layout from xml when needed
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.task_card, parent, false)
+            .inflate(R.layout.reminder_card, parent, false)
         return ViewHolder(view)
     }
 
@@ -78,10 +77,13 @@ class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback, v
 
         override fun onLongClick(v: View?): Boolean {
             val position: Int = adapterPosition
-            val temp = mData.removeAt(position)
+            mListener.removeAtIndex(position)
             notifyItemRemoved(position)
 
-            val layout: RecyclerView = mView.findViewById(R.id.task_lists_recycler)
+            /*val temp = mData.removeAt(position)
+            notifyItemRemoved(position)
+
+            val layout: RecyclerView = mView.findViewById(R.id.reminder_recycler)
             Snackbar.make(layout, "Reminder Deleted", Snackbar.LENGTH_LONG)
                 .setAction("Undo") {
                     mData.add(position, temp)
@@ -97,7 +99,7 @@ class TaskRecyclerAdapter(data: MutableList<Task>, listener: RecyclerCallback, v
                     override fun onShown(transientBottomBar: Snackbar?) {
                         super.onShown(transientBottomBar)
                     }
-            }).show()
+            }).show()*/
 
             return true
         }
