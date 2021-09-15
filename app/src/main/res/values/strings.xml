@@ -2,7 +2,7 @@
     <string name="app_name">ToDoList</string>
     <string name="item_removed">Item Removed</string>
     <string name="undo">UNDO</string>
-    <string name="filename">todolist_reminders</string>
+    <string name="filename">reminders</string>
     <string name="hint_title">Title</string>
     <string name="sun">Sun</string>
     <string name="mon">Mon</string>
@@ -13,4 +13,5 @@
     <string name="recurring">Recurring</string>
     <string name="create_new_reminder">Create New Reminder</string>
     <string name="fri">Fri</string>
+    <string name="update_reminder">Save Changes</string>
 </resources>

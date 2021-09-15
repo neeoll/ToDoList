@@ -7,6 +7,7 @@ import java.io.File
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
+// TODO: Remove log statements
 class FileMethods() {
 
     fun exists(filename:String, context: Context): Boolean? {
@@ -29,9 +30,7 @@ class FileMethods() {
     }
 
     fun writeFile(filename: String, context: Context?, reminderList: ArrayList<Reminder>) {
-        val fileOutputStream = context?.openFileOutput(filename,
-            AppCompatActivity.MODE_PRIVATE
-        )
+        val fileOutputStream = context?.openFileOutput(filename, AppCompatActivity.MODE_PRIVATE)
         val objectOutputStream = ObjectOutputStream(fileOutputStream)
         objectOutputStream.writeObject(reminderList)
         fileOutputStream?.close()

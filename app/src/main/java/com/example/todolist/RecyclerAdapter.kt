@@ -1,5 +1,6 @@
 package com.example.todolist
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,19 +9,19 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R.drawable.*
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import com.example.todolist.newreminder.NewReminderFragment
 
 class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, view: View) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     private val mData: MutableList<Reminder> = data
     private val mListener: RecyclerCallback = listener
-    private val mView: View = view
+    private lateinit var communicator: Communicator
 
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
         fun switchAlarm(data: Reminder, isChecked: Boolean)
+        fun openEditFragment(data: Reminder)
     }
 
     // inflates the row layout from xml when needed
@@ -32,7 +33,6 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, v
 
     // binds the data to the TextView in each row
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val dayArray: ArrayList<String> = arrayListOf("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")
         var daysString = ""
         mData[position].days.indices.forEach { i ->
@@ -48,12 +48,17 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, v
         }
         when {
             mData[position].recurring -> {
-                holder.recurring.setBackgroundResource(ic_baseline_repeat_24)
+                holder.recurring.setBackgroundResource(reminder_repeat)
             }
             else -> {
-                holder.recurring.setBackgroundResource(ic_outline_looks_one_24)
+                holder.recurring.setBackgroundResource(reminder_once)
             }
         }
+    }
+
+    fun deleteReminder(index: Int) {
+        mListener.removeAtIndex(index)
+        notifyItemRemoved(index)
     }
 
     // total number of rows
@@ -76,31 +81,7 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, v
         }
 
         override fun onLongClick(v: View?): Boolean {
-            val position: Int = adapterPosition
-            mListener.removeAtIndex(position)
-            notifyItemRemoved(position)
-
-            /*val temp = mData.removeAt(position)
-            notifyItemRemoved(position)
-
-            val layout: RecyclerView = mView.findViewById(R.id.reminder_recycler)
-            Snackbar.make(layout, "Reminder Deleted", Snackbar.LENGTH_LONG)
-                .setAction("Undo") {
-                    mData.add(position, temp)
-                    notifyItemInserted(position)
-                }.addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                        super.onDismissed(transientBottomBar, event)
-                        if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                            mListener.removeAtIndex(position)
-                        }
-                    }
-
-                    override fun onShown(transientBottomBar: Snackbar?) {
-                        super.onShown(transientBottomBar)
-                    }
-            }).show()*/
-
+            mListener.openEditFragment(mData[adapterPosition])
             return true
         }
     }

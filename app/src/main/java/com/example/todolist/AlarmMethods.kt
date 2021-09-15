@@ -4,16 +4,24 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.util.Log
+import com.example.todolist.receiver.AlarmReceiver
 import java.util.*
 
+// TODO: Remove log statements
 /* SUNDAY = 1, MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6, SATURDAY = 7 */
 class AlarmMethods {
+    private val weekInMillis: Long = 604800000
+
     fun createAlarm(data: Reminder, context: Context) {
+        if (!data.isActive) { return }
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val notificationIntent = Intent(context, AlarmReceiver::class.java)
             .putExtra("title", data.title)
+            .putExtra("id", data.id)
+
         val broadcastIntent = PendingIntent.getBroadcast(
             context, data.id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -26,7 +34,20 @@ class AlarmMethods {
                 calendar.set(Calendar.MINUTE, data.minute)
                 calendar.set(Calendar.SECOND, 0)
 
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, broadcastIntent)
+                if (data.recurring) {
+                    alarmManager.setRepeating(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        weekInMillis,
+                        broadcastIntent
+                    )
+                } else {
+                    alarmManager.setExact(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        broadcastIntent
+                    )
+                }
             }
         }
     }
@@ -45,5 +66,17 @@ class AlarmMethods {
         } else {
             createAlarm(data, context)
         }
+    }
+
+    fun cancelAlarm(dataId: Int, context: Context) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context, dataId, intent, PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        alarmManager.cancel(pendingIntent)
+        pendingIntent.cancel()
+        Log.d("RECEIVER", "Alarm with ID $dataId cancelled successfully")
     }
 }

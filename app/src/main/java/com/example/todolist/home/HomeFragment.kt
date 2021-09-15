@@ -1,26 +1,31 @@
 package com.example.todolist.home
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.*
+import com.example.todolist.editreminder.EditReminderFragment
 import com.example.todolist.newreminder.NewReminderFragment
-import com.example.todolist.FileMethods
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.view.*
+import kotlinx.android.synthetic.main.reminder_card.*
 
+// TODO: Remove log statements
 class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
     RecyclerAdapter.RecyclerCallback {
 
     private var reminderList: ArrayList<Reminder> = arrayListOf()
     private var communicatorData: ArrayList<Reminder> = arrayListOf()
     private val homeListener: HomeCallback = listener
-    private val filename: String = file
 
     interface HomeCallback {
         fun removeAtIndex(index: Int)
@@ -43,28 +48,46 @@ class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
             }
         }
 
-        /*val swipeToDelete = object: SwipeToDelete(0, ItemTouchHelper.LEFT) {
+        val itemTouchCallback = object: SwipeToDelete(0, ItemTouchHelper.LEFT) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Log.d("MAIN", "${viewHolder.adapterPosition}")
-                homeListener.removeAtIndex(viewHolder.adapterPosition)
+                Log.d("SWIPE", "$direction")
+                val position = viewHolder.adapterPosition
+                val temp = reminderList.removeAt(position)
+
+                val layout: RecyclerView = this@HomeFragment.requireView().findViewById(R.id.reminder_recycler)
+                Snackbar.make(layout, "Reminder Deleted", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO") {
+                        reminderList.add(position, temp)
+                        layout.adapter?.notifyItemInserted(position)
+                    }
+                    .addCallback(object: BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                                removeAtIndex(position)
+                                layout.adapter?.notifyItemRemoved(position)
+                            }
+                        }
+                    }).show()
             }
         }
-
-        val helper = ItemTouchHelper(swipeToDelete)*/
 
         view.reminder_recycler.apply {
             layoutManager = LinearLayoutManager(
                 activity, LinearLayoutManager.VERTICAL, false)
             adapter = RecyclerAdapter(reminderList, this@HomeFragment, this)
-            // helper.attachToRecyclerView(this)
+
+            ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
         }
 
         view.add_reminder.setOnClickListener {
-            val newTaskFragment = NewReminderFragment()
+            val newReminderFragment = NewReminderFragment()
             val supportFragmentManager = requireActivity().supportFragmentManager
             val transaction = supportFragmentManager.beginTransaction()
 
-            transaction.replace(R.id.fragment_container, newTaskFragment).commit()
+            transaction.replace(R.id.fragment_container, newReminderFragment)
+                .addToBackStack("homeFragment")
+                .commit()
         }
 
         return view
@@ -74,11 +97,7 @@ class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
         reminderList.add(0, reminder)
     }
 
-    override fun onStop() {
-        super.onStop()
-        context?.let { FileMethods().writeFile(filename, it, reminderList) }
-    }
-
+    // TODO: Remove log statements
     override fun removeAtIndex(index: Int) {
         try {
             val temp = reminderList.removeAt(index)
@@ -91,5 +110,15 @@ class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
 
     override fun switchAlarm(data: Reminder, isChecked: Boolean) {
         homeListener.switchAlarm(data, isChecked)
+    }
+
+    override fun openEditFragment(data: Reminder) {
+        val editReminderFragment = EditReminderFragment(data)
+        val supportFragmentManager = requireActivity().supportFragmentManager
+        val transaction = supportFragmentManager.beginTransaction()
+
+        transaction.replace(R.id.fragment_container, editReminderFragment)
+            .addToBackStack("homeFragment")
+            .commit()
     }
 }

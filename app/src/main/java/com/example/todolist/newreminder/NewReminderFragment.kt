@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.fragment.app.Fragment
+import com.example.todolist.Communicator
 import com.example.todolist.R
 import com.example.todolist.Reminder
 import kotlinx.android.synthetic.main.fragment_new_reminder.view.*
@@ -18,10 +19,6 @@ class NewReminderFragment : Fragment() {
     private val activeDays: ArrayList<Boolean> = arrayListOf()
 
     private val calendar = Calendar.getInstance()
-
-    interface Communicator {
-        fun sendReminderData(data: Reminder)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +42,7 @@ class NewReminderFragment : Fragment() {
         view.create_reminder.setOnClickListener {
             checkboxes.forEach { activeDays.add(it.isChecked) }
 
-            communicator.sendReminderData(Reminder(
+            communicator.createReminderData(Reminder(
                 Random.nextInt(0, 100),
                 view.new_reminder_title.text.toString(),
                 view.new_reminder_time.hour,
