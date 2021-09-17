@@ -9,14 +9,12 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R.drawable.*
-import com.example.todolist.newreminder.NewReminderFragment
 
 class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, view: View) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val mData: MutableList<Reminder> = data
+    private var mData: MutableList<Reminder> = data
     private val mListener: RecyclerCallback = listener
-    private lateinit var communicator: Communicator
 
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
@@ -54,11 +52,6 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback, v
                 holder.recurring.setBackgroundResource(reminder_once)
             }
         }
-    }
-
-    fun deleteReminder(index: Int) {
-        mListener.removeAtIndex(index)
-        notifyItemRemoved(index)
     }
 
     // total number of rows

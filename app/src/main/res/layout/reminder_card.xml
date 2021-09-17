@@ -11,8 +11,7 @@
     <RelativeLayout
         android:id="@+id/task_foreground"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/white">
+        android:layout_height="80dp">
         <TextView
             android:id="@+id/card_time"
             android:layout_width="wrap_content"

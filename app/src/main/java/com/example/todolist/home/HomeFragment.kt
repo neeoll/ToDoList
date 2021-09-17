@@ -1,12 +1,10 @@
 package com.example.todolist.home
 
-import android.graphics.Canvas
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.android.synthetic.main.reminder_card.*
 
 // TODO: Remove log statements
-class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
+class HomeFragment(listener: HomeCallback) : Fragment(),
     RecyclerAdapter.RecyclerCallback {
 
     private var reminderList: ArrayList<Reminder> = arrayListOf()
@@ -38,6 +36,8 @@ class HomeFragment(listener: HomeCallback, file: String) : Fragment(),
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        reminderList.clear()
 
         if (arguments != null) {
             communicatorData = arguments?.getSerializable("data") as ArrayList<Reminder>

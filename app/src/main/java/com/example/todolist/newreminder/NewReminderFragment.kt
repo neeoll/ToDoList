@@ -42,15 +42,17 @@ class NewReminderFragment : Fragment() {
         view.create_reminder.setOnClickListener {
             checkboxes.forEach { activeDays.add(it.isChecked) }
 
-            communicator.createReminderData(Reminder(
+            communicator.receiveReminderData(Reminder(
                 Random.nextInt(0, 100),
                 view.new_reminder_title.text.toString(),
                 view.new_reminder_time.hour,
                 view.new_reminder_time.minute,
                 activeDays,
-                view.checkbox_recurring.isChecked)
+                view.checkbox_recurring.isChecked),
+                "create"
             )
         }
+
         return view
     }
 }

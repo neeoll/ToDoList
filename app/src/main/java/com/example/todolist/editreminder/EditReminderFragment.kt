@@ -49,13 +49,14 @@ class EditReminderFragment(data: Reminder): Fragment() {
         view.update_reminder.setOnClickListener {
             checkboxes.forEach { activeDays.add(it.isChecked) }
 
-            communicator.updateReminderData(Reminder(
+            communicator.receiveReminderData(Reminder(
                 reminderToEdit.id,
                 view.update_reminder_title.text.toString(),
                 view.update_reminder_time.hour,
                 view.update_reminder_time.minute,
                 activeDays,
-                view.checkbox_recurring.isChecked)
+                view.checkbox_recurring.isChecked),
+                "update"
             )
         }
         return view
