@@ -2,9 +2,7 @@ package com.example.todolist.home
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +22,52 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
     private var reminderList: ArrayList<Reminder> = arrayListOf()
     private var communicatorData: ArrayList<Reminder> = arrayListOf()
     private val homeListener: HomeCallback = listener
+    private var actionMode: ActionMode? = null
+
+    private val actionModeCallback = object: ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            requireActivity().menuInflater.inflate(R.menu.context_menu, menu)
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            if (item?.itemId == R.id.action_delete) {
+                val tempList: ArrayList<Reminder> = arrayListOf()
+                for (reminder in reminderList) {
+                    if (reminder.selected) {
+                        tempList.add(reminder)
+                    }
+                }
+
+                for (reminder in tempList) {
+                    if (reminderList.contains(reminder)) {
+                        removeAtIndex(findIndex(reminder))
+                    }
+                }
+
+                requireView().reminder_recycler.adapter?.notifyDataSetChanged()
+                mode?.finish()
+            }
+            return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+            for (reminder in reminderList) {
+                reminder.selected = false
+            }
+
+            requireView().reminder_recycler.adapter?.notifyDataSetChanged()
+            actionMode = null
+        }
+    }
+
+    private fun findIndex(reminder: Reminder): Int {
+        return reminderList.indexOf(reminder)
+    }
 
     interface HomeCallback {
         fun removeAtIndex(index: Int)
@@ -37,9 +81,8 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        reminderList.clear()
-
         if (arguments != null) {
+            reminderList.clear()
             communicatorData = arguments?.getSerializable("data") as ArrayList<Reminder>
             for (item in communicatorData) {
                 insertReminder(Reminder(
@@ -65,7 +108,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
                             super.onDismissed(transientBottomBar, event)
                             if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
                                 removeAtIndex(position)
-                                layout.adapter?.notifyItemRemoved(position)
+                                layout.adapter?.notifyDataSetChanged()
                             }
                         }
                     }).show()
@@ -75,7 +118,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
         view.reminder_recycler.apply {
             layoutManager = LinearLayoutManager(
                 activity, LinearLayoutManager.VERTICAL, false)
-            adapter = RecyclerAdapter(reminderList, this@HomeFragment, this)
+            adapter = RecyclerAdapter(reminderList, this@HomeFragment)
 
             ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
         }
@@ -120,5 +163,14 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
         transaction.replace(R.id.fragment_container, editReminderFragment)
             .addToBackStack("homeFragment")
             .commit()
+    }
+
+    override fun onViewLongPress(index: Int) {
+        if (actionMode == null) {
+            actionMode = requireActivity().startActionMode(actionModeCallback)!!
+        }
+
+        reminderList[index].selected = !reminderList[index].selected
+        requireView().reminder_recycler.adapter?.notifyItemChanged(index)
     }
 }

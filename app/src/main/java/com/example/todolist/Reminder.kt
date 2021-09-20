@@ -9,5 +9,6 @@ class Reminder(
     val minute: Int,
     val days: ArrayList<Boolean>,
     val recurring: Boolean,
-    var isActive: Boolean = true
+    var isActive: Boolean = true,
+    var selected: Boolean = false
 ): Serializable

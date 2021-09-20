@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.title = ""
         setContentView(R.layout.activity_main)
 
         filename = getString(R.string.filename)
@@ -83,11 +85,5 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
     override fun switchAlarm(data: Reminder, isChecked: Boolean) {
         alarmMethods.toggleAlarm(data, isChecked, this)
         fileMethods.writeFile(filename, this, reminderList)
-    }
-
-    override fun onBackPressed() {
-        Log.d("MAIN", "Back Pressed")
-        Log.d("MAIN", "${reminderList.size}")
-        super.onBackPressed()
     }
 }
