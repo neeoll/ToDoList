@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomSwitch" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="colorControlActivated">#FF8D00</item>
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
+        <item name="android:colorForeground">#f1f1f1</item>
+    </style>
+    <style name="CustomButton" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:backgroundTint">#FF8D00</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    <style name="CustomCheckbox" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:buttonTint">#FF8D00</item>
+    </style>
+</resources>

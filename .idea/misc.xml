@@ -3,20 +3,30 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/bordered_textview.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/card_selected.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/ic_baseline_access_alarm_24.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/list.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/rectangular_button.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/recyclerview_background.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/recyclerview_background_upsidedown.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/reminder_delete.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/reminder_once.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/reminder_switch.xml" value="0.22763157894736843" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/round_button.xml" value="0.13421052631578947" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/drawable/selected_item.xml" value="0.22763157894736843" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout-v21/fragment_new_reminder.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/activity_main.xml" value="0.1331521739130435" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_edit_reminder.xml" value="0.21403508771929824" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_home.xml" value="0.2" />
-        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_new_reminder.xml" value="0.1331521739130435" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_new_reminder.xml" value="0.2" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/fragment_new_task.xml" value="0.14385964912280702" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/reminder_card.xml" value="0.4" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/layout/task_card.xml" value="0.14385964912280702" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/menu/action_bar.xml" value="0.4" />
+        <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/menu/context_menu.xml" value="0.21403508771929824" />
         <entry key="..\:/Users/Noel/AndroidStudioProjects/ToDoList/app/src/main/res/menu/delete_menu.xml" value="0.21403508771929824" />
       </map>
     </option>

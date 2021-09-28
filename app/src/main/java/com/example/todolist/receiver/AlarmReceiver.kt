@@ -47,8 +47,7 @@ class AlarmReceiver: BroadcastReceiver() {
 
         val notification = compatBuilder
             .setContentTitle(context.resources.getString(R.string.app_name))
-            .setContentText("$intentId")
-            //.setContentText(intent.getStringExtra("title"))
+            .setContentText("${intent.getStringExtra("title")}")
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH).build()

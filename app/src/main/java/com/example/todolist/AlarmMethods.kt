@@ -34,6 +34,10 @@ class AlarmMethods {
                 calendar.set(Calendar.MINUTE, data.minute)
                 calendar.set(Calendar.SECOND, 0)
 
+                if (System.currentTimeMillis() >= calendar.timeInMillis) {
+                    calendar.add(Calendar.DAY_OF_YEAR, 7)
+                }
+
                 if (data.recurring) {
                     alarmManager.setRepeating(
                         AlarmManager.RTC_WAKEUP,
@@ -53,18 +57,9 @@ class AlarmMethods {
     }
 
     fun toggleAlarm(data: Reminder, isChecked: Boolean, context: Context) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
-
-        if (!isChecked) {
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, data.id, intent, PendingIntent.FLAG_CANCEL_CURRENT
-            )
-            alarmManager.cancel(pendingIntent)
-            pendingIntent.cancel()
-            Log.d("RECEIVER", "Alarm with ID ${data.id} cancelled successfully")
-        } else {
-            createAlarm(data, context)
+        when (isChecked) {
+            true -> { cancelAlarm(data.id, context) }
+            false -> { createAlarm(data, context) }
         }
     }
 
@@ -77,6 +72,14 @@ class AlarmMethods {
         )
         alarmManager.cancel(pendingIntent)
         pendingIntent.cancel()
-        Log.d("RECEIVER", "Alarm with ID $dataId cancelled successfully")
+        Log.d("ALARM", "Alarm with ID $dataId cancelled successfully")
+    }
+
+    private fun getDate(milliseconds: Long): String {
+        val formatter = SimpleDateFormat("MM/dd/yyyy hh:mm:ss.SSS")
+        val calendar = Calendar.getInstance()
+
+        calendar.timeInMillis = milliseconds
+        return formatter.format(calendar.timeInMillis)
     }
 }

@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".home.HomeFragment">
 
-    <!--<androidx.constraintlayout.widget.Guideline
-        android:id="@+id/fragment_ceiling"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />-->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reminder_recycler"
         android:layout_width="match_parent"
@@ -26,13 +19,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <!--<ImageView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/recyclerview_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fragment_ceiling"/>-->
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -42,19 +35,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_reminder"
         android:layout_width="80sp"
-        android:layout_height="80sp"
+        android:layout_height="90sp"
         android:layout_marginBottom="50dp"
         android:layout_marginRight="25dp"
-        android:background="@drawable/round_button"
-        android:foreground="?selectableItemBackground"
-        android:gravity="center"
         android:text="+"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        app:theme="@style/CustomButton"
         android:textSize="30sp"
+        app:cornerRadius="80sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

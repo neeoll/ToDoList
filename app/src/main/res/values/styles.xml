@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomSwitch" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">#BF467A</item>
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#f1f1f1</item>
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">#42221f1f</item>
+    </style>
+    <style name="CustomButton" parent="Theme.AppCompat.Light">
+        <item name="android:backgroundTint">#BF467A</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+    <style name="CustomCheckbox" parent="Theme.AppCompat.Light">
+        <item name="android:buttonTint">#BF467A</item>
+    </style>
+
+</resources>

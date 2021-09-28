@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
         super.onCreate(savedInstanceState)
 
         supportActionBar?.title = ""
+        supportActionBar?.hide()
         setContentView(R.layout.activity_main)
-
         filename = getString(R.string.filename)
 
         checkForFile()
@@ -31,11 +31,10 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
             transitionToHomeFragment(false)
         } else {
             Log.d("MAIN", "Exists")
-
-            for (item in fileMethods.readFile(filename, this)) {
-                reminderList.add(0, item)
-                alarmMethods.cancelAlarm(item.id, this)
-                alarmMethods.createAlarm(item, this)
+            fileMethods.readFile(filename, this).forEach {
+                reminderList.add(0, it)
+                alarmMethods.cancelAlarm(it.id, this)
+                alarmMethods.createAlarm(it, this)
             }
 
             transitionToHomeFragment(true)
@@ -74,9 +73,10 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
 
     override fun removeAtIndex(index: Int) {
         try {
-            val temp = reminderList.removeAt(index)
+            val removedReminder = reminderList.removeAt(index)
+            alarmMethods.cancelAlarm(removedReminder.id, this)
             fileMethods.writeFile(filename, this, reminderList)
-            Log.d("RECEIVER", "Item removed: $temp")
+            Log.d("RECEIVER", "Item removed: $removedReminder")
         } catch (e: Exception) {
             Log.e("RECEIVER", "(MainActivity) $e")
         }

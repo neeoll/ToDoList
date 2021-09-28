@@ -18,8 +18,6 @@ class NewReminderFragment : Fragment() {
     private lateinit var communicator: Communicator
     private val activeDays: ArrayList<Boolean> = arrayListOf()
 
-    private val calendar = Calendar.getInstance()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,7 +25,7 @@ class NewReminderFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_new_reminder, container, false)
         communicator = activity as Communicator
 
-        val currentDay = calendar.get(Calendar.DAY_OF_WEEK) - 1
+        val currentDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
         val checkboxes: ArrayList<CheckBox> = arrayListOf(
             view.checkbox_sun,
             view.checkbox_mon,

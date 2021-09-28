@@ -1,9 +1,8 @@
 package com.example.todolist
 
-import android.graphics.Color
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +18,8 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
         fun switchAlarm(data: Reminder, isChecked: Boolean)
-        fun openEditFragment(data: Reminder)
         fun onViewLongPress(index: Int)
+        fun onViewPress(index: Int)
     }
 
     // inflates the row layout from xml when needed
@@ -43,21 +42,16 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
         holder.days.text = daysString
         holder.toggle.isChecked = mData[position].isActive
         holder.toggle.setOnCheckedChangeListener { _, isChecked ->
-            mListener.switchAlarm(mData[position], isChecked)
+            mListener.switchAlarm(mData[position], !isChecked)
         }
-        when {
-            mData[position].recurring -> {
-                holder.recurring.setBackgroundResource(reminder_repeat)
-            }
-            else -> {
-                holder.recurring.setBackgroundResource(reminder_once)
-            }
+        when (mData[position].recurring) {
+            true -> holder.recurring.setBackgroundResource(reminder_repeat)
+            false -> holder.recurring.setBackgroundResource(reminder_once)
         }
 
-        if (mData[position].selected) {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFF00"))
-        } else {
-            holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        when (mData[position].selected) {
+            true -> holder.foreground.visibility = View.VISIBLE
+            false ->holder.foreground.visibility = View.INVISIBLE
         }
     }
 
@@ -74,6 +68,7 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
         val time: TextView = itemView.findViewById(R.id.card_time)
         val toggle: Switch = itemView.findViewById(R.id.card_toggle)
         val days: TextView = itemView.findViewById(R.id.card_days)
+        val foreground: RelativeLayout = itemView.findViewById(R.id.reminder_foreground)
         val recurring: ImageView = itemView.findViewById(R.id.card_status)
         var isSelected = false
 
@@ -88,11 +83,7 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
         }
 
         override fun onClick(v: View?) {
-            if (!multiSelect) { return }
-            else {
-                isSelected = !isSelected
-                notifyItemChanged(adapterPosition)
-            }
+            mListener.onViewPress(adapterPosition)
         }
     }
 }

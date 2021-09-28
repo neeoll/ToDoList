@@ -48,6 +48,10 @@ class BootReceiver: BroadcastReceiver() {
                 calendar.set(Calendar.MINUTE, data.minute)
                 calendar.set(Calendar.SECOND, 0)
 
+                if (System.currentTimeMillis() >= calendar.timeInMillis) {
+                    calendar.add(Calendar.DAY_OF_YEAR, 7)
+                }
+
                 if (data.recurring) {
                     alarmManager.setRepeating(
                         AlarmManager.RTC_WAKEUP,
@@ -67,21 +71,13 @@ class BootReceiver: BroadcastReceiver() {
     }
 
     private fun exists(filename:String, context: Context): Boolean? {
-        val file: File? = context.getFileStreamPath(filename)
-        return file?.exists()
+        return context.getFileStreamPath(filename).exists()
     }
 
     private fun readFile(filename: String, context: Context?): ArrayList<Reminder> {
-        val reminderList: ArrayList<Reminder> = arrayListOf()
-
         val fileInputStream = context?.openFileInput(filename)
         val objectInputStream = ObjectInputStream(fileInputStream)
 
-        val tempList = objectInputStream.readObject() as java.util.ArrayList<Reminder>
-        for (item in tempList) {
-            reminderList.add(0, item)
-        }
-
-        return reminderList
+        return objectInputStream.readObject() as java.util.ArrayList<Reminder>
     }
 }

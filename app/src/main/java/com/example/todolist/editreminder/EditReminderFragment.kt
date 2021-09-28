@@ -59,6 +59,7 @@ class EditReminderFragment(data: Reminder): Fragment() {
                 "update"
             )
         }
+
         return view
     }
 }

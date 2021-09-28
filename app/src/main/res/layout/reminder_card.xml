@@ -5,11 +5,10 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/task_card"
-    android:background="@drawable/list"
     android:layout_margin="10dp">
 
     <RelativeLayout
-        android:id="@+id/task_foreground"
+        android:id="@+id/reminder_background"
         android:layout_width="match_parent"
         android:layout_height="80dp">
         <TextView
@@ -50,10 +49,23 @@
             android:id="@+id/card_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:theme="@style/CustomSwitch"
             android:layout_toEndOf="@id/card_title"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/card_toggle_marginEnd"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/reminder_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@android:color/transparent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/selected_item" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
