@@ -7,6 +7,6 @@
     <dimen name="card_status_marginEnd">8dp</dimen>
     <dimen name="card_toggle_marginEnd">8dp</dimen>
     <dimen name="nReminder_title_margin">16dp</dimen>
-    <dimen name="nReminder_time_margin">16dp</dimen>
+    <dimen name="nReminder_time_margin">8dp</dimen>
     <dimen name="create_reminder_margin">16dp</dimen>
 </resources>

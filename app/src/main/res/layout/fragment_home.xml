@@ -19,28 +19,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/recyclerview_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/recyclerview_background_upsidedown"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/add_reminder"
         android:layout_width="80sp"
         android:layout_height="90sp"
         android:layout_marginBottom="50dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
         android:text="+"
         android:textAlignment="center"
         app:theme="@style/CustomButton"

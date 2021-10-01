@@ -14,14 +14,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".2"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ceiling">
-
         <EditText
             android:id="@+id/update_reminder_title"
             android:layout_width="match_parent"
@@ -29,89 +21,99 @@
             android:layout_margin="@dimen/nReminder_title_margin"
             android:hint="@string/hint_title"
             android:minHeight="48dp"
-            tools:ignore="Autofill,TextFields" />
+            tools:ignore="Autofill,TextFields"
+            app:layout_constraintTop_toBottomOf="@id/ceiling"/>
         <TimePicker
             android:id="@+id/update_reminder_time"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:timePickerMode="spinner"
-            android:layout_margin="@dimen/nReminder_time_margin" />
+            android:layout_margin="@dimen/nReminder_time_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/recurring_toggle"
+            app:layout_constraintRight_toLeftOf="@id/checkboxes"
+            app:layout_constraintTop_toBottomOf="@id/update_reminder_title" />
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/checkboxes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="8dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toRightOf="@id/update_reminder_time"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/update_reminder_title">
             <CheckBox
                 android:id="@+id/checkbox_sun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sun"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_mon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/mon"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_tue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tue"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_wed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wed"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_thu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/thu"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_fri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/fri"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
             <CheckBox
                 android:id="@+id/checkbox_sat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sat"
                 android:theme="@style/CustomCheckbox"
-                android:scaleX="0.9"
-                android:scaleY="0.9" />
+                android:minHeight="48dp" />
         </LinearLayout>
-        <CheckBox
-            android:id="@+id/checkbox_recurring"
+        <Switch
+            android:id="@+id/recurring_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/recurring"
-            android:theme="@style/CustomCheckbox"
-            android:scaleX="0.9"
-            android:scaleY="0.9" />
+            android:text="Recurring"
+            android:theme="@style/CustomSwitch"
+            android:switchPadding="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/checkboxes"
+            app:layout_constraintRight_toLeftOf="@id/checkboxes"
+            app:layout_constraintTop_toBottomOf="@id/update_reminder_time" />
         <Button
             android:id="@+id/update_reminder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/update_reminder"
+            app:theme="@style/CustomButton"
             android:textSize="20sp"
             android:gravity="center"
-            android:layout_margin="@dimen/create_reminder_margin"/>
-    </LinearLayout>
+            android:layout_margin="@dimen/create_reminder_margin"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recurring_toggle"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

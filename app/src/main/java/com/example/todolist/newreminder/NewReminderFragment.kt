@@ -46,7 +46,7 @@ class NewReminderFragment : Fragment() {
                 view.new_reminder_time.hour,
                 view.new_reminder_time.minute,
                 activeDays,
-                view.checkbox_recurring.isChecked),
+                view.recurring_toggle.isChecked),
                 "create"
             )
         }

@@ -44,7 +44,7 @@ class EditReminderFragment(data: Reminder): Fragment() {
             }
         }
 
-        view.checkbox_recurring.isChecked = reminderToEdit.recurring
+        view.recurring_toggle.isChecked = reminderToEdit.recurring
 
         view.update_reminder.setOnClickListener {
             checkboxes.forEach { activeDays.add(it.isChecked) }
@@ -55,7 +55,7 @@ class EditReminderFragment(data: Reminder): Fragment() {
                 view.update_reminder_time.hour,
                 view.update_reminder_time.minute,
                 activeDays,
-                view.checkbox_recurring.isChecked),
+                view.recurring_toggle.isChecked),
                 "update"
             )
         }
