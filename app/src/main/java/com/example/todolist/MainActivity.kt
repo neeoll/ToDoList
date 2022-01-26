@@ -1,43 +1,85 @@
 package com.example.todolist
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.todolist.databinding.ActivityMainBinding
 import com.example.todolist.home.HomeFragment
-import java.util.*
+import com.example.todolist.util.AlarmUtil
+import com.example.todolist.util.DatabaseUtil
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlin.collections.ArrayList
 
-// TODO: Remove log statements
 class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallback {
 
-    private val fileMethods = FileMethods()
-    private val alarmMethods = AlarmMethods()
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
     private var reminderList: ArrayList<Reminder> = arrayListOf()
-    private lateinit var filename: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.title = ""
-        supportActionBar?.hide()
-        setContentView(R.layout.activity_main)
-        filename = getString(R.string.filename)
 
-        checkForFile()
+        if (BuildConfig.DEBUG) {
+            Firebase.auth.useEmulator("10.0.2.2", 9099)
+            Firebase.firestore.useEmulator("10.0.2.2", 8080)
+            Firebase.database.useEmulator("10.0.2.2", 9000)
+        }
+
+        auth = Firebase.auth
+        if (auth.currentUser == null) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+            return
+        }
+
+        if (DatabaseUtil.getUid(this) == "") {
+            DatabaseUtil.setUid(this, auth.currentUser?.uid.toString())
+        }
+
+        Firebase.database.setPersistenceEnabled(true)
+        database = Firebase.database.getReference("${DatabaseUtil.getUid(this)}/reminders")
+        checkDatabase()
     }
 
-    private fun checkForFile() {
-        if (fileMethods.exists(filename, this) == false) {
-            Log.d("MAIN", "Doesn't Exist")
-            transitionToHomeFragment(false)
-        } else {
-            Log.d("MAIN", "Exists")
-            fileMethods.readFile(filename, this).forEach {
-                reminderList.add(0, it)
-                alarmMethods.cancelAlarm(it.id, this)
-                alarmMethods.createAlarm(it, this)
+    private fun checkDatabase() {
+        database.get().addOnSuccessListener { database ->
+            if (database.hasChildren()) {
+                try {
+                    database.children.forEach {
+                        val newReminder = it.getValue(Reminder::class.java)!!
+                        AlarmUtil.cancelAlarm(newReminder.alarmId, this)
+                        reminderList.add(newReminder)
+                        AlarmUtil.createAlarm(newReminder, this)
+                    }
+                    transitionToHomeFragment(true)
+                } catch (e: Exception) {
+                    Log.d(TAG, "$e")
+                    transitionToHomeFragment(false)
+                    Toast.makeText(
+                        this@MainActivity, "Failed to get stored data", Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                transitionToHomeFragment(false)
             }
-
-            transitionToHomeFragment(true)
+        }.addOnFailureListener {
+            Log.e(TAG, "$it")
+            transitionToHomeFragment(false)
+            Toast.makeText(
+                this@MainActivity, "Failed to get stored data", Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -51,39 +93,47 @@ class MainActivity : AppCompatActivity(), Communicator, HomeFragment.HomeCallbac
             homeFragment.arguments = bundle
         }
 
-        transaction.replace(R.id.fragment_container, homeFragment).commit()
+        transaction.replace(binding.fragmentContainer.id, homeFragment).commit()
     }
 
     override fun receiveReminderData(data: Reminder, action: String) {
         when (action) {
-            "create" -> { reminderList.add(data) }
+            "create" -> {
+                reminderList.add(data)
+                DatabaseUtil.writeData(database, data)
+            }
             "update" -> {
                 for (i in reminderList.indices) {
-                    if (reminderList[i].id == data.id) {
+                    if (reminderList[i].alarmId == data.alarmId) {
                         reminderList[i] = data
                     }
                 }
+                DatabaseUtil.updateData(database, data)
             }
         }
 
-        fileMethods.writeFile(filename, this, reminderList)
-        alarmMethods.createAlarm(data, this)
+        AlarmUtil.createAlarm(data, this)
         transitionToHomeFragment(true)
     }
 
     override fun removeAtIndex(index: Int) {
         try {
             val removedReminder = reminderList.removeAt(index)
-            alarmMethods.cancelAlarm(removedReminder.id, this)
-            fileMethods.writeFile(filename, this, reminderList)
-            Log.d("RECEIVER", "Item removed: $removedReminder")
+            AlarmUtil.cancelAlarm(removedReminder.alarmId, this)
+            DatabaseUtil.removeData(database, removedReminder.pushId)
+            Log.d(TAG, "Item removed: $removedReminder")
         } catch (e: Exception) {
-            Log.e("RECEIVER", "(MainActivity) $e")
+            Log.e(TAG, "Error:", e)
         }
     }
 
     override fun switchAlarm(data: Reminder, isChecked: Boolean) {
-        alarmMethods.toggleAlarm(data, isChecked, this)
-        fileMethods.writeFile(filename, this, reminderList)
+        data.isActive = isChecked
+        AlarmUtil.toggleAlarm(data, this)
+        DatabaseUtil.updateData(database, data)
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 }

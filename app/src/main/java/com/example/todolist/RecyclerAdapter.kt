@@ -7,13 +7,13 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R.drawable.*
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     private var mData: MutableList<Reminder> = data
     private val mListener: RecyclerCallback = listener
-    private var multiSelect: Boolean = false
 
     interface RecyclerCallback {
         fun removeAtIndex(index: Int)
@@ -37,8 +37,10 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
             if (mData[position].days[i]) { daysString += "${dayArray[i]} " }
         }
 
+        val timeString = "${mData[position].hour}:${mData[position].minute}"
+
         holder.title.text = mData[position].title
-        holder.time.text = "${mData[position].hour}:${mData[position].minute}"
+        holder.time.text = timeString
         holder.days.text = daysString
         holder.toggle.isChecked = mData[position].isActive
         holder.toggle.setOnCheckedChangeListener { _, isChecked ->
@@ -66,11 +68,10 @@ class RecyclerAdapter(data: MutableList<Reminder>, listener: RecyclerCallback) :
     {
         val title: TextView = itemView.findViewById(R.id.card_title)
         val time: TextView = itemView.findViewById(R.id.card_time)
-        val toggle: Switch = itemView.findViewById(R.id.card_toggle)
+        val toggle: SwitchMaterial = itemView.findViewById(R.id.card_toggle)
         val days: TextView = itemView.findViewById(R.id.card_days)
         val foreground: RelativeLayout = itemView.findViewById(R.id.reminder_foreground)
         val recurring: ImageView = itemView.findViewById(R.id.card_status)
-        var isSelected = false
 
         init {
             itemView.setOnLongClickListener(this)

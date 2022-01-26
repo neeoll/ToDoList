@@ -7,16 +7,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.*
+import com.example.todolist.databinding.FragmentHomeBinding
 import com.example.todolist.editreminder.EditReminderFragment
 import com.example.todolist.newreminder.NewReminderFragment
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.reminder_card.*
 
 
 // TODO: Remove log statements
 class HomeFragment(listener: HomeCallback) : Fragment(),
     RecyclerAdapter.RecyclerCallback {
 
+    private lateinit var binding: FragmentHomeBinding
     private var reminderList: ArrayList<Reminder> = arrayListOf()
     private val homeListener: HomeCallback = listener
     private var actionMode: ActionMode? = null
@@ -44,7 +44,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
                 R.id.action_delete -> {
                     tempList.forEach {
                         if (reminderList.contains(it)) {
-                            requireView().reminder_recycler.adapter?.notifyItemRemoved(reminderList.indexOf(it))
+                            binding.reminderRecycler.adapter?.notifyItemRemoved(reminderList.indexOf(it))
                             removeAtIndex(reminderList.indexOf(it))
                         }
                     }
@@ -82,9 +82,9 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         if (arguments != null) {
             reminderList.clear()
@@ -94,17 +94,17 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
             }
         }
 
-        view.reminder_recycler.apply {
+        binding.reminderRecycler.apply {
             layoutManager = LinearLayoutManager(
                 activity, LinearLayoutManager.VERTICAL, false)
             adapter = RecyclerAdapter(reminderList, this@HomeFragment)
         }
 
-        view.add_reminder.setOnClickListener {
+        binding.addReminder.setOnClickListener {
             openFragment("newReminder")
         }
 
-        return view
+        return binding.root
     }
 
     private fun openFragment(name: String, reminder: Reminder? = null) {
@@ -147,7 +147,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
         if (actionMode == null) {
             actionMode = requireActivity().startActionMode(actionModeCallback)!!
             reminderList[index].selected = !reminderList[index].selected
-            requireView().reminder_recycler.adapter?.notifyItemChanged(index)
+            binding.reminderRecycler.adapter?.notifyItemChanged(index)
         } else {
             return
         }
@@ -158,7 +158,7 @@ class HomeFragment(listener: HomeCallback) : Fragment(),
             return
         } else {
             reminderList[index].selected = !reminderList[index].selected
-            requireView().reminder_recycler.adapter?.notifyItemChanged(index)
+            binding.reminderRecycler.adapter?.notifyItemChanged(index)
         }
     }
 }

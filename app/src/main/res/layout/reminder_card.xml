@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/task_card"
     android:layout_margin="10dp">
 
@@ -45,7 +44,7 @@
             android:textSize="20sp"
             android:layout_toEndOf="@id/card_status"
             android:layout_centerVertical="true"/>
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/card_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@android:color/transparent">
-
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"

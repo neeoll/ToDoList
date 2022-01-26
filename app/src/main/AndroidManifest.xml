@@ -2,16 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.todolist">
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ToDoList">
+        android:theme="@style/Theme.ToDoList"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,19 +23,24 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SignInActivity" />
+
         <receiver
-            android:name=".receiver.AlarmReceiver">
+            android:name=".receiver.AlarmReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.example.todolist.SEND_NOTIFICATION" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.BootReceiver">
+        <receiver
+            android:name=".receiver.BootReceiver"
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <service android:name=".service.BootService" android:exported="false" />
 
     </application>
 

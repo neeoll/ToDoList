@@ -2,7 +2,6 @@
     <string name="app_name">ToDoList</string>
     <string name="item_removed">Item Removed</string>
     <string name="undo">UNDO</string>
-    <string name="filename">reminders</string>
     <string name="hint_title">Title</string>
     <string name="sun">Sun</string>
     <string name="mon">Mon</string>

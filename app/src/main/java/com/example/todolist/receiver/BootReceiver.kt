@@ -6,25 +6,46 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
+import com.example.todolist.BuildConfig
 import com.example.todolist.Reminder
-import java.io.File
-import java.io.ObjectInputStream
+import com.example.todolist.util.AlarmUtil
+import com.example.todolist.util.DatabaseUtil
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import java.util.*
-import kotlin.collections.ArrayList
 
 // TODO: Remove log statements
 class BootReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == "android.intent.action.BOOT_COMPLETED" ||
             intent.action == "android.intent.action.QUICKBOOT_POWERON") {
-            Log.d("BOOT", "Device booted")
+            Log.d(TAG, "Device booted")
 
-            if (exists("reminders", context) == true) {
-                val fileData = readFile("reminders", context)
-                for (item in fileData) {
-                    createAlarm(item, context)
+            if (BuildConfig.DEBUG) {
+                Firebase.auth.useEmulator("10.0.2.2", 9099)
+                Firebase.database.useEmulator("10.0.2.2", 9000)
+            }
+
+            Firebase.database.setPersistenceEnabled(true)
+            val database = Firebase.database.getReference("${DatabaseUtil.getUid(context)}/reminders")
+            database.get().addOnSuccessListener {
+                if (it.hasChildren()) {
+                    try {
+                        it.children.forEach { snapshot ->
+                            AlarmUtil.createAlarm(snapshot.getValue(Reminder::class.java)!!, context)
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "$e")
+                        Toast.makeText(
+                            context, "Failed to get stored data", Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-                Log.d("BOOT", "$fileData")
+            }.addOnFailureListener {
+                Log.d(TAG, "FailureListener:", it)
             }
         }
     }
@@ -34,10 +55,10 @@ class BootReceiver: BroadcastReceiver() {
 
         val notificationIntent = Intent(context, AlarmReceiver::class.java)
             .putExtra("title", data.title)
-            .putExtra("id", data.id)
+            .putExtra("id", data.alarmId)
 
         val broadcastIntent = PendingIntent.getBroadcast(
-            context, data.id, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            context, data.alarmId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val calendar = Calendar.getInstance()
@@ -70,14 +91,7 @@ class BootReceiver: BroadcastReceiver() {
         }
     }
 
-    private fun exists(filename:String, context: Context): Boolean? {
-        return context.getFileStreamPath(filename).exists()
-    }
-
-    private fun readFile(filename: String, context: Context?): ArrayList<Reminder> {
-        val fileInputStream = context?.openFileInput(filename)
-        val objectInputStream = ObjectInputStream(fileInputStream)
-
-        return objectInputStream.readObject() as java.util.ArrayList<Reminder>
+    companion object {
+        const val TAG = "BootReceiver"
     }
 }
